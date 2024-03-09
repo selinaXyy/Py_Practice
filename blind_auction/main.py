@@ -18,7 +18,6 @@ def add_to_bidders_list(new_bidder, bidders_list):
 def find_final_winner(bidders_list):
     highest_bid = 0
     winner_name = ""
-    winner_bid = 0
 
     for bidder in bidders_list:
         if bidder["bid"] > highest_bid:
