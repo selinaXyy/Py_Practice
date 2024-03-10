@@ -18,7 +18,7 @@ class Snake:
             self.add_segment(position)
 
     def move(self):
-        for segment_num in range(len(self.snake_segments)-1, 0, -1): #start, stop, step
+        for segment_num in range(len(self.snake_segments)-1, 0, -1): #start(inclusive), stop(exclusive), step
             previous_segment = self.snake_segments[segment_num - 1]
             self.snake_segments[segment_num].setposition(previous_segment.xcor(), previous_segment.ycor()) #set the current segment's position to its previous one
         self.snake_head.forward(STEP_SIZE) #move the snake head 20px forward (one square)
