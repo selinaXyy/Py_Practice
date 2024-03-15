@@ -18,7 +18,7 @@ class Snake:
             self.add_segment(position)
 
     def move(self):
-        for segment_num in range(len(self.snake_segments)-1, 0, -1): #start(inclusive), stop(exclusive), step
+        for segment_num in range(len(self.snake_segments)-1, 0, -1): #start, stop, step
             previous_segment = self.snake_segments[segment_num - 1]
             self.snake_segments[segment_num].setposition(previous_segment.xcor(), previous_segment.ycor()) #set the current segment's position to its previous one
         self.snake_head.forward(STEP_SIZE) #move the snake head 20px forward (one square)
@@ -49,3 +49,10 @@ class Snake:
     def left(self):
         if not self.snake_head.heading() == RIGHT:
             self.snake_head.setheading(LEFT)
+
+    def reset(self):
+        for segment in self.snake_segments:
+            segment.goto(1000, 1000)
+        self.snake_segments.clear() #deletes all the segments added
+        self.init_snake()
+        self.snake_head = self.snake_segments[0]
