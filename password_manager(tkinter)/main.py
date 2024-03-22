@@ -1,6 +1,6 @@
 from tkinter import *
 from tkinter import messagebox #not a class
-import random
+from random import *
 DEFAULT_EMAIL = "selinaxue2@gmail.com"
 
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
@@ -10,24 +10,16 @@ def generate_password():
     numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
     symbols = ['!', '#', '$', '%', '&', '(', ')', '*', '+']
 
-    num_of_letters = random.randint(8, 10)
-    num_of_symbols = random.randint(2, 4)
-    num_of_numbers = random.randint(2, 4)
+    #list comprehension
+    letters_list = [choice(letters) for _ in range(randint(8, 10))]
+    symbols_list = [choice(symbols) for _ in range(randint(2, 4))]
+    numbers_list = [choice(numbers) for _ in range(randint(2, 4))]
 
-    password_list = []
-
-    for char in range(num_of_letters):
-        password_list.append(random.choice(letters))
-
-    for char in range(num_of_symbols):
-        password_list += random.choice(symbols)
-
-    for char in range(num_of_numbers):
-        password_list += random.choice(numbers)
+    password_list = letters_list + symbols_list + numbers_list
 
     random.shuffle(password_list)
 
-    password = "".join(password_list)
+    password = "".join(password_list) #used on strings
 
     #insert into password entry
     entry_password.insert(0, password)
