@@ -1,6 +1,8 @@
 from tkinter import *
 from tkinter import messagebox #not a class
 from random import *
+import pyperclip
+
 DEFAULT_EMAIL = "selinaxue2@gmail.com"
 
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
@@ -26,6 +28,8 @@ def generate_password():
 
     #insert into password entry
     entry_password.insert(0, password)
+    #copy to clipboard
+    pyperclip.copy(password)
 
 # ---------------------------- SAVE PASSWORD ------------------------------- #
 def add_data():
