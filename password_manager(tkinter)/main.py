@@ -2,8 +2,9 @@ from tkinter import *
 from tkinter import messagebox #not a class
 from random import *
 import pyperclip
+import json
 
-DEFAULT_EMAIL = "selinaxue2@gmail.com"
+DEFAULT_EMAIL = "yiyangxue.xyy@gmail.com"
 
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 #referenced from the password generator project
@@ -33,17 +34,36 @@ def generate_password():
 
 # ---------------------------- SAVE PASSWORD ------------------------------- #
 def add_data():
-    website = entry_website.get()
+    website = entry_website.get().title()
     email_username = entry_email_username.get()
     password = entry_password.get()
+    #nested dict
+    new_data = {
+        website:{
+        "email/username": email_username,
+        "password": password,
+        }
+    }
 
     #save data
     valid_info = check_validation(website, email_username, password)
     if valid_info:
         user_response = confirm_info_popup(website, email_username, password)
         if user_response:
-            with open("./data.txt", mode="a") as data:
-                data.write(f"{website} | {email_username} | {password}\n")
+            try:
+                #read existing data
+                with open("./data.json", mode="r") as data_file:
+                    data = json.load(data_file)
+            except FileNotFoundError: 
+                #create json file (first entry)
+                with open("./data.json", mode="w") as data_file:
+                    json.dump(new_data, data_file, indent=4)#write data
+            else: #if try block succeed
+                #update data in json format
+                with open("./data.json", mode="w") as data_file:
+                    data.update(new_data) 
+                    json.dump(data, data_file, indent=4) #write data
+
             data_saved_popup()
             clear_entries()
 
@@ -75,6 +95,23 @@ def confirm_info_popup(website_par, email_username_par, password_par):
 def data_saved_popup():
     messagebox.showinfo(message="Your data has been saved!")
 
+# ---------------------------- SEARCH DATA ------------------------------- #
+def search_data():
+    website = entry_website.get().title()
+    try:
+        with open("./data.json", mode="r") as data_file:
+            data = json.load(data_file)
+
+        email_username = data[website]["email/username"]
+        password = data[website]["password"]
+
+    except FileNotFoundError:
+        messagebox.showerror(message="No Data File Found")
+    except KeyError:
+        messagebox.showerror(message=f"No details for {website} exists")
+    else:
+        messagebox.showinfo(message=f"Website: {website}\n\nEmail/Username: {email_username}\n\nPassword: {password}")
+
 # ---------------------------- UI SETUP ------------------------------- #
 window = Tk()
 window.title("Password Manager")
@@ -97,8 +134,8 @@ lbl_password = Label(text="Password:")
 lbl_password.grid(row=3, column=0)
 
 #input
-entry_website = Entry(width=38)
-entry_website.grid(row=1, column=1, columnspan=2) #default column/rowspan == 1
+entry_website = Entry(width=21)
+entry_website.grid(row=1, column=1) #default column/rowspan == 1
 entry_website.focus() #cursor
 
 entry_email_username = Entry(width=38)
@@ -110,7 +147,10 @@ entry_password = Entry(width=21)
 entry_password.grid(row=3, column=1)
 
 #btn
-btn_generate = Button(text="Generate Password", command=generate_password)
+btn_search = Button(text="Search", width=13, pady=0, command=search_data)
+btn_search.grid(row=1, column=2)
+
+btn_generate = Button(text="Generate Password", width=13, pady=0, command=generate_password)
 btn_generate.grid(row=3, column=2)
 
 btn_add = Button(text="Add", width=36, command=add_data)
