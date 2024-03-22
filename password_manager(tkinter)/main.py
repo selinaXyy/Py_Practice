@@ -27,9 +27,7 @@ def generate_password():
 
     random.shuffle(password_list)
 
-    password = ""
-    for char in password_list:
-        password += char
+    password = "".join(password_list)
 
     #insert into password entry
     entry_password.insert(0, password)
